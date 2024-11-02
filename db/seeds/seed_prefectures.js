@@ -1,0 +1,57 @@
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<voprefecture_code> }
+ */
+exports.seed = async function (knex) {
+  // Deletes ALL existing entries
+  await knex("prefectures").del();
+  await knex("prefectures").insert([
+    { prefecture_code: 1, prefecture_name: "Hokkaido" },
+    { prefecture_code: 2, prefecture_name: "Aomori" },
+    { prefecture_code: 3, prefecture_name: "Iwate" },
+    { prefecture_code: 4, prefecture_name: "Miyagi" },
+    { prefecture_code: 5, prefecture_name: "Akita" },
+    { prefecture_code: 6, prefecture_name: "Yamagata" },
+    { prefecture_code: 7, prefecture_name: "Fukushima" },
+    { prefecture_code: 8, prefecture_name: "Ibaraki" },
+    { prefecture_code: 9, prefecture_name: "Tochigi" },
+    { prefecture_code: 10, prefecture_name: "Gunma" },
+    { prefecture_code: 11, prefecture_name: "Saitama" },
+    { prefecture_code: 12, prefecture_name: "Chiba" },
+    { prefecture_code: 13, prefecture_name: "Tokyo" },
+    { prefecture_code: 14, prefecture_name: "Kanagawa" },
+    { prefecture_code: 15, prefecture_name: "Niigata" },
+    { prefecture_code: 16, prefecture_name: "Toyama" },
+    { prefecture_code: 17, prefecture_name: "Ishikawa" },
+    { prefecture_code: 18, prefecture_name: "Fukui" },
+    { prefecture_code: 19, prefecture_name: "Yamanashi" },
+    { prefecture_code: 20, prefecture_name: "Nagano" },
+    { prefecture_code: 21, prefecture_name: "Gifu" },
+    { prefecture_code: 22, prefecture_name: "Shizuoka" },
+    { prefecture_code: 23, prefecture_name: "Aichi" },
+    { prefecture_code: 24, prefecture_name: "Mie" },
+    { prefecture_code: 25, prefecture_name: "Shiga" },
+    { prefecture_code: 26, prefecture_name: "Kyoto" },
+    { prefecture_code: 27, prefecture_name: "Osaka" },
+    { prefecture_code: 28, prefecture_name: "Hyogo" },
+    { prefecture_code: 29, prefecture_name: "Nara" },
+    { prefecture_code: 30, prefecture_name: "Wakayama" },
+    { prefecture_code: 31, prefecture_name: "Tottori" },
+    { prefecture_code: 32, prefecture_name: "Shimane" },
+    { prefecture_code: 33, prefecture_name: "Okayama" },
+    { prefecture_code: 34, prefecture_name: "Hiroshima" },
+    { prefecture_code: 35, prefecture_name: "Yamaguchi" },
+    { prefecture_code: 36, prefecture_name: "Tokushima" },
+    { prefecture_code: 37, prefecture_name: "Kagawa" },
+    { prefecture_code: 38, prefecture_name: "Ehime" },
+    { prefecture_code: 39, prefecture_name: "Kochi" },
+    { prefecture_code: 40, prefecture_name: "Fukuoka" },
+    { prefecture_code: 41, prefecture_name: "Saga" },
+    { prefecture_code: 42, prefecture_name: "Nagasaki" },
+    { prefecture_code: 43, prefecture_name: "Kumamoto" },
+    { prefecture_code: 44, prefecture_name: "Oita" },
+    { prefecture_code: 45, prefecture_name: "Miyazaki" },
+    { prefecture_code: 46, prefecture_name: "Kagoshima" },
+    { prefecture_code: 47, prefecture_name: "Okinawa" },
+  ]);
+};
