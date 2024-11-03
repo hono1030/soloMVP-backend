@@ -1,3 +1,4 @@
+// const express = require("express");
 const express = require("express");
 const knex = require("./knex");
 const app = express();
@@ -5,27 +6,51 @@ const cors = require("cors");
 const AWS = require("aws-sdk");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
+const { Configuration, OpenAI } = require("openai");
+const openaiRequest = require("./openaiRequest");
 const port = process.env.PORT || 8080;
 console.log(process.env.AWS_ACCESS_KEY_ID);
+
+const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
 // Create S3 service object
 s3 = new AWS.S3({ apiVersion: "2006-03-01" });
 
-// middleware
+// middlewareConfiguration,
 app.use(cors());
 app.use(express.json());
 
 // Call S3 to list the buckets
-s3.listBuckets(function (err, data) {
-  if (err) {
-    console.log("Error", err);
-  } else {
-    console.log("Success", data.Buckets);
-  }
-});
+// s3.listBuckets(function (err, data) {
+//   if (err) {
+//     console.log("Error", err);
+//   } else {
+//     console.log("Success", data.Buckets);
+//   }
+// });
 
 // Multer storage configuration
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+app.post("/apiChat", async (req, res) => {
+  messageContent = {
+    "Travel Style": req.body.travel_style,
+    "Preferred Activity Level": req.body.activity_level,
+    "Interest in Cultural Experiences": req.body.cultural_experiences,
+    "Transport Mode": req.body.transport_mode,
+    "Travel Companions": req.body.travel_companions,
+    "Cat Lover": req.cat_lover,
+  };
+
+  const openaiResponse = await openaiRequest(
+    `${JSON.stringify(messageContent)}`
+  );
+
+  console.log(openaiResponse);
+
+  return res.status(201).json({ openaiResponse });
+});
 
 app.post(
   "/upload/:userId/:prefectureCode",
