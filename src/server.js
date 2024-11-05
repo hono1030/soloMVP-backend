@@ -134,6 +134,7 @@ app.post(
 app.get("/images/:prefectureCode", authentication, async (req, res) => {
   const prefectureCode = req.params.prefectureCode;
 
+  console.log(prefectureCode);
   try {
     const allImagesOfPrefecture = await knex
       .select("*")
@@ -231,7 +232,7 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/sessions", async (req, res) => {
-  if (req.session) {
+  if (req.session.userid && req.session.username) {
     return res.status(200).json({
       userid: req.session.userid,
       username: req.session.username,
