@@ -8,22 +8,53 @@ const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
 const { Configuration, OpenAI } = require("openai");
 const openaiRequest = require("./openaiRequest");
+const authentication = require("./authentication");
 const bcrypt = require("bcrypt");
+const session = require("express-session");
+const crypto = require("crypto");
 
 const port = process.env.PORT || 8080;
+const URL = process.env.FRONTEND_URL;
+
 console.log(process.env.AWS_ACCESS_KEY_ID);
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// bcrypt
-const saltRounds = 10;
-
 // Create S3 service object
 s3 = new AWS.S3({ apiVersion: "2006-03-01" });
 
-// middlewareConfiguration,
-app.use(cors());
+// bcrypt
+const saltRounds = 10;
+
+// Generate a random secret key
+const sessionSecretKey = crypto.randomBytes(32).toString("hex");
+
+// middlewareConfiguration
+app.set("trust proxy", 1);
+
+// middleware
+app.use(
+  cors({
+    origin: URL,
+    credentials: true,
+  })
+);
+
 app.use(express.json());
+
+app.use(
+  session({
+    secret: sessionSecretKey,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24, // Set cookie expiration (1 day here)
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : false, // Required for cross-origin cookies
+    },
+  })
+);
 
 // Call S3 to list the buckets
 // s3.listBuckets(function (err, data) {
@@ -38,7 +69,7 @@ app.use(express.json());
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-app.post("/apiChat", async (req, res) => {
+app.post("/apiChat", authentication, async (req, res) => {
   messageContent = {
     "Travel Style": req.body.travel_style,
     "Preferred Activity Level": req.body.activity_level,
@@ -57,6 +88,7 @@ app.post("/apiChat", async (req, res) => {
 
 app.post(
   "/upload/:userId/:prefectureCode",
+  authentication,
   upload.single("image"),
   async (req, res) => {
     const userId = req.params.userId;
@@ -99,7 +131,7 @@ app.post(
   }
 );
 
-app.get("/images/:prefectureCode", async (req, res) => {
+app.get("/images/:prefectureCode", authentication, async (req, res) => {
   const prefectureCode = req.params.prefectureCode;
 
   try {
@@ -181,10 +213,10 @@ app.post("/login", async (req, res) => {
 
     const { id, username: dbUserName } = userInfo[0];
 
-    // req.session.userid = id;
-    // req.session.username = dbUserName;
+    req.session.userid = id;
+    req.session.username = dbUserName;
 
-    res.status(201).json({ id, username: dbUserName });
+    res.status(201).json({ useid: id, username: dbUserName });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -196,6 +228,17 @@ app.post("/logout", (req, res) => {
     res.clearCookie("connect.sid"); // Clear session cookie
     res.status(200).json({ message: "Logout successful" });
   });
+});
+
+app.get("/sessions", async (req, res) => {
+  if (req.session) {
+    return res.status(200).json({
+      userid: req.session.userid,
+      username: req.session.username,
+    });
+  } else {
+    res.status(401).send("User Not Logged In");
+  }
 });
 
 app.get("/", (req, res) => {
