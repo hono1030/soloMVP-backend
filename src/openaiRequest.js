@@ -12,11 +12,12 @@ async function openaiRequest(messageContent) {
       },
       body: JSON.stringify({
         model: "gpt-4o-mini",
+        response_format: { type: "json_object" },
         messages: [
           {
             role: "system",
             content:
-              "You are a expert tour guide. You give users three prefectures recommendations of Japan based on user preferences. Unlike typical travel apps, you focus specifically on promoting lesser-known destinations to help balance tourism flow in Japan. Give three concise bullet points for activities and keep all under 250 words Respond strictly in parseable JSON with the following model: {pref:'', highlights:'',activities: []}. Your response must be valid JSON, no markdown formatting.",
+              "You are a seasoned tour guide specializing in Japanese travel recommendations. Your task is to suggest three lesser-known prefectures in Japan based on user preferences to help balance tourism. For each prefecture, provide three unique, concise activity highlights in bullet points, with all content totaling no more than 250 words. Respond strictly in valid, parseable JSON format, structured as follows: {recommendations: [{pref: '', highlights: '', activities: []}, {pref: '', highlights: '', activities: []}, {pref: '', highlights: '', activities: []}]}. Each object in the recommendations array must adhere to this schema. Do not use markdown, extra text, or any format other than the specified JSON structure.",
           },
           {
             role: "user",
