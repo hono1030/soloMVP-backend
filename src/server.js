@@ -8,10 +8,15 @@ const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
 const { Configuration, OpenAI } = require("openai");
 const openaiRequest = require("./openaiRequest");
+const bcrypt = require("bcrypt");
+
 const port = process.env.PORT || 8080;
 console.log(process.env.AWS_ACCESS_KEY_ID);
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// bcrypt
+const saltRounds = 10;
 
 // Create S3 service object
 s3 = new AWS.S3({ apiVersion: "2006-03-01" });
@@ -46,8 +51,6 @@ app.post("/apiChat", async (req, res) => {
   const openaiResponse = await openaiRequest(
     `${JSON.stringify(messageContent)}`
   );
-
-  console.log(openaiResponse);
 
   return res.status(201).json({ openaiResponse });
 });
@@ -125,6 +128,36 @@ app.get("/images/:prefectureCode", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Internal Server Error");
+  }
+});
+
+app.post("/signup", async (req, res) => {
+  try {
+    const username = req.body.username;
+    const plainPassword = req.body.password;
+
+    // Hashing a password
+    const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
+
+    const addedUserId = await knex("users").insert(
+      {
+        username: username,
+        password: hashedPassword,
+      },
+      ["id"]
+    );
+
+    if (!addedUserId) {
+      return res.status(400).json("Username is already taken");
+    } else {
+      res.status(201).json({ addedUserId });
+    }
+  } catch (ex) {
+    if (ex.code == "23505") {
+      return res.status(400).json({ message: "Username is already taken" });
+    }
+
+    res.status(500).json({ message: "An error occurred", error: ex.message });
   }
 });
 
