@@ -161,6 +161,35 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.post("/login", async (req, res) => {
+  const username = req.body.username;
+  const plainPassword = req.body.password;
+
+  try {
+    let userInfo = await knex("users")
+      .where({ username })
+      .select("id", "username", "password");
+
+    if (userInfo.length === 0) {
+      return res.status(400).json({ error: "Incorrect username or password" });
+    }
+
+    const isMatch = await bcrypt.compare(plainPassword, userInfo[0].password);
+
+    if (!isMatch)
+      return res.status(400).json({ error: "Incorrect username or password" });
+
+    const { id, username: dbUserName } = userInfo[0];
+
+    // req.session.userid = id;
+    // req.session.username = dbUserName;
+
+    res.status(201).json({ id, username: dbUserName });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.get("/", (req, res) => {
   res.send("API is runnnig...");
 });
