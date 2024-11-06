@@ -40,7 +40,7 @@ async function openaiRequest(messageContent) {
     }
 
     const data = await response.json();
-    console.log(data);
+
     // Filtering to just get the message.
     const assistantMessage = data.choices[0].message.content.trim();
     return assistantMessage;

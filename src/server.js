@@ -56,16 +56,6 @@ app.use(
   })
 );
 
-// Call S3 to list the buckets
-// s3.listBuckets(function (err, data) {
-//   if (err) {
-//     console.log("Error", err);
-//   } else {
-//     console.log("Success", data.Buckets);
-//   }
-// });
-
-// Multer storage configuration
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -116,7 +106,6 @@ app.post(
         })
         .into("images");
 
-      console.log(savedImage);
       if (savedImage) {
         return res.status(201).json(`Image uploaded`);
       } else {
@@ -134,7 +123,6 @@ app.post(
 app.get("/images/:prefectureCode", authentication, async (req, res) => {
   const prefectureCode = req.params.prefectureCode;
 
-  console.log(prefectureCode);
   try {
     const allImagesOfPrefecture = await knex
       .select("*")
@@ -142,7 +130,6 @@ app.get("/images/:prefectureCode", authentication, async (req, res) => {
       .where({ prefecture_code: prefectureCode });
 
     const allImagesUrl = allImagesOfPrefecture.map((image) => {
-      console.log(image);
       const UrlParams = {
         Bucket: image.bucket,
         Key: image.key,
