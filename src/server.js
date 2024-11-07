@@ -32,7 +32,7 @@ const saltRounds = 10;
 const sessionSecretKey = crypto.randomBytes(32).toString("hex");
 
 // middlewareConfiguration
-app.set("trust proxy", 1);
+// app.set("trust proxy", 1);
 
 // middleware
 app.use(
@@ -117,7 +117,7 @@ app.post(
       }
     } catch (err) {
       console.error(err);
-      res.status(500).send("Internal Server Error");
+      res.status(500).send("Internal Server Error in Upload Image");
     }
   }
 );
@@ -149,7 +149,7 @@ app.get("/images/:prefectureCode", authentication, async (req, res) => {
     }
   } catch (err) {
     console.error(err);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send("Internal Server Error in Image prefecture");
   }
 });
 
@@ -231,8 +231,13 @@ app.get("/sessions", async (req, res) => {
   }
 });
 
-app.get("/", (req, res) => {
-  res.send("API is runnnig...");
+app.get("/", async (req, res) => {
+  try {
+    res.send("API is runnnig...");
+  } catch (error) {
+    console.error("Error in first route");
+    res.send("Error!");
+  }
 });
 
 app.listen(port, () => {
