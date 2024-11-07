@@ -205,7 +205,7 @@ app.post("/login", async (req, res) => {
     req.session.userid = id;
     req.session.username = dbUserName;
 
-    res.status(201).json({ useid: id, username: dbUserName });
+    res.status(201).json({ userid: id, username: dbUserName });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
