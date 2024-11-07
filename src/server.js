@@ -58,6 +58,11 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  console.log("Intercepting request...");
+  next();
+});
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
