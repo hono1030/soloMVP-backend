@@ -30,7 +30,7 @@ const saltRounds = 10;
 const sessionSecretKey = crypto.randomBytes(32).toString("hex");
 
 // middlewareConfiguration
-// app.set("trust proxy", 1);
+app.set("trust proxy", 1);
 
 // middleware
 app.use(
