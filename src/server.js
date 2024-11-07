@@ -17,6 +17,7 @@ const port = process.env.PORT || 8080;
 const URL = process.env.FRONTEND_URL;
 
 console.log(process.env.AWS_ACCESS_KEY_ID);
+console.log(process.env.FRONTEND_URL);
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
