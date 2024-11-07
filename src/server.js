@@ -36,7 +36,7 @@ app.set("trust proxy", 1);
 app.use(
   cors({
     credentials: true,
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL.trim(), // remove whitespaces
     preflightContinue: true,
   })
 );
