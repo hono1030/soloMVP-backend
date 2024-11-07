@@ -14,8 +14,6 @@ const session = require("express-session");
 const crypto = require("crypto");
 
 const port = process.env.PORT || 8080;
-const URL =
-  process.env.FRONTEND_URL || "https://solomvp-discoverjp-frontend.netlify.app";
 
 console.log(process.env.AWS_ACCESS_KEY_ID);
 console.log(process.env.FRONTEND_URL);
@@ -35,7 +33,16 @@ const sessionSecretKey = crypto.randomBytes(32).toString("hex");
 // app.set("trust proxy", 1);
 
 // middleware
-app.use(cors());
+if (process.env.FRONTEND_URL) {
+  app.use(
+    cors({
+      credentials: true,
+      origin: process.env.FRONTEND_URL,
+    })
+  );
+} else {
+  app.use(cors());
+}
 
 app.use(express.json());
 
