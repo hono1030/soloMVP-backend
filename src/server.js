@@ -14,7 +14,8 @@ const session = require("express-session");
 const crypto = require("crypto");
 
 const port = process.env.PORT || 8080;
-const URL = process.env.FRONTEND_URL;
+const URL =
+  process.env.FRONTEND_URL || "https://solomvp-discoverjp-frontend.netlify.app";
 
 console.log(process.env.AWS_ACCESS_KEY_ID);
 console.log(process.env.FRONTEND_URL);
