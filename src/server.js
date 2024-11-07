@@ -43,11 +43,10 @@ app.set("trust proxy", 1);
 app.use(
   cors({
     credentials: true,
-    origin: [process.env.FRONTEND_URL],
+    origin: process.env.FRONTEND_URL,
+    preflightContinue: true,
   })
 );
-
-app.use(express.json());
 
 app.use(
   session({
@@ -63,10 +62,7 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  console.log("Intercepting request...");
-  next();
-});
+app.use(express.json());
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
