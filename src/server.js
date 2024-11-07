@@ -33,16 +33,12 @@ const sessionSecretKey = crypto.randomBytes(32).toString("hex");
 // app.set("trust proxy", 1);
 
 // middleware
-if (process.env.FRONTEND_URL) {
-  app.use(
-    cors({
-      credentials: true,
-      origin: process.env.FRONTEND_URL,
-    })
-  );
-} else {
-  app.use(cors());
-}
+app.use(
+  cors({
+    credentials: true,
+    origin: [process.env.FRONTEND_URL],
+  })
+);
 
 app.use(express.json());
 
