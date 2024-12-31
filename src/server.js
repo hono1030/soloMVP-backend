@@ -60,7 +60,7 @@ app.use(express.json());
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-app.post("/apiChat", authentication, async (req, res) => {
+app.post("/apiChat", async (req, res) => {
   messageContent = {
     "Travel Style": req.body.travel_style,
     "Preferred Activity Level": req.body.activity_level,
@@ -226,7 +226,7 @@ app.get("/sessions", async (req, res) => {
       username: req.session.username,
     });
   } else {
-    res.status(401).send("User Not Logged In");
+    res.status(401).json({ error: "User not logged in" });
   }
 });
 
