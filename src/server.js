@@ -121,7 +121,7 @@ app.post(
   }
 );
 
-app.get("/images/:prefectureCode", authentication, async (req, res) => {
+app.get("/images/:prefectureCode", async (req, res) => {
   const prefectureCode = req.params.prefectureCode;
 
   try {
